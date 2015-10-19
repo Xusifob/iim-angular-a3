@@ -1,0 +1,73 @@
+<div class="container">
+	<h1 class="text-center">To Watch List</h1>
+
+
+	<dl>
+		<dt>Liste des films</dt>
+		<dd ng-repeat="movie in movies  track by $index" ng-class="{'line-through': movie.seen }">
+			<input type="checkbox" ng-model="movie.seen"/>
+			{{movie.title}}
+			<button class="btn btn-danger btn-xs" ng-click="removeItem(movie.title)">x</button>
+		</dd>
+	</dl>
+
+	<div class="alert alert-success" ng-show="displaySuccessAdd">
+		<b>Bravo</b> un film a été ajouté à votre liste
+	</div>
+	<div class="alert alert-danger" ng-show="displayErrorAdd">
+		<b>Oops</b> Il semblerait que vous essayez d'ajouter un film que vous avez déjà ajouté
+	</div>
+	<div class="alert alert-success" ng-show="displaySuccessRemove">
+		<b>Bye bye</b> un film a été retiré de votre liste
+	</div>
+
+
+	<form>
+		<input type="text" ng-model="searchTerm" ng-model-options="{debounce:300}" class="form-control" placeholder="Chercher un film...">
+	</form>
+
+	<div class="row" ng-show="searchTerm.length >= 3 && searchResults">
+		<h2>Résultat pour la recherche : {{searchTerm}}</h2>
+
+
+		<div class="col-sm-2" ng-repeat="searchResult in searchResults track by $index">
+			<img src="{{baseImageUrl}}{{searchResult['poster_path']}}" ng-click="addItems(searchResult['original_title'])" class="img-responsive"/>
+			<h2 class="text-center" ng-click="modalOpen(searchResult)">{{searchResult['original_title']}}</h2>
+		</div>
+	</div>
+
+
+	<div class="row" scroll ng-show="searchTerm.length < 3 || !searchResults">
+		<h2>Films populaires</h2>
+		<div class="row form-group">
+			<div class="col-sm-2 col-lg-1">
+				Trier Par :
+			</div>
+			<div class="col-sm-3">
+				<select ng-model="order_by" class="form-control">
+					<option value="popularity.desc">Populaire</option>
+					<option value="primary_release_date.desc">Date</option>
+					<option value="vote_average.desc">Votes</option>
+				</select>
+			</div>
+		</div>
+
+
+		<div class="col-sm-3 col-md-2 col-xs-6 card" ng-repeat="searchResult in popularMovies track by $index">
+			<div class="voile" ng-show="searchResult['seen']"></div>
+			<img src="{{baseImageUrl}}{{searchResult['poster_path']}}" class="img-responsive"/>
+			<div class="bandeau">
+				<h2 class="text-center">
+					{{searchResult['original_title']}}
+					<span class="pull-right">
+						<a href="javascript:" ng-click="modalOpen(searchResult)"><i class="fa fa-info-circle" title="More informations"></i></a>
+						<a href="javascript:" ng-hide="searchResult['checked']" ng-click="addItems(searchResult['original_title'],$index)" ><i class="fa fa-heart-o" title="Add to favorites"></i></a>
+						<a href="javascript:" ng-show="searchResult['checked']" ng-click="removeItem(searchResult['original_title'],$index)" ><i class="fa fa-heart" title="Remove from favorites"></i></a>
+					</span>
+				</h2>
+				<span class="pull-left"><i class="fa fa-calendar"></i> {{searchResult['release_date']}}</span>
+				<span class="pull-right"><i class="fa fa-star"></i> {{searchResult['vote_average']}}/10</span>
+			</div>
+		</div>
+	</div>
+</div>

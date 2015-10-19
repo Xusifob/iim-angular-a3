@@ -1,0 +1,19 @@
+<div ng-controller="HomeCtrl as hc">
+    <div class="modal-body">
+        <div class="pull-left">
+            <img src="{{baseImageUrl}}{{movie.poster_path}}" class="img-responsive img-modal"/>
+        </div>
+        <h2>{{movie.original_title}}</h2>
+        <p>{{movie.overview}}</p>
+        <ul class="list-unstyled list-inline genres">
+            <li ng-repeat="genre in genres track by $index">{{genre}}</li>
+        </ul>
+    </div>
+    <div class="clearfix">
+        <p><i class="fa fa-star"></i> Note : {{movie.vote_average}}/10 pour {{movie.vote_count}} votes</p>
+        <p><i class="fa fa-calendar"></i> Sortie le : {{movie.release_date}}</p>
+        <a href="javascript:" class="heart" title="Add to favorites" ng-hide="movie.checked" ng-click="hc.addItems(movie['original_title'],$index)" ><i class="fa fa-2x fa-heart-o color-red"></i></a>
+        <a href="javascript:" class="heart" title="Remove from favorites" ng-show="movie.checked" ng-click="hc.removeItem(movie['original_title'],$index)"><i class="fa fa-2x fa-heart color-red"></i></a>
+
+    </div>
+</div>
